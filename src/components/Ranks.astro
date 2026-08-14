@@ -13,10 +13,10 @@ function rankImage(name: string): ImageMetadata | null {
 }
 ---
 
-<section class="section section-alt" id="ranks">
+<section class="section section-alt" id="classes">
   <div class="container">
     <div class="section-header reveal">
-      <h2>Camp levels</h2>
+      <h2>Camp classes</h2>
       <p class="lead">
         For each camp level, there are specific physical exercises and minimum repetitions you must
         be able to complete before applying. Smoking, alcohol, drugs, chips, and soda are
@@ -51,8 +51,8 @@ function rankImage(name: string): ImageMetadata | null {
               )}
               <div class="rank-body">
                 <h3>
-                  {rank.level ? `Level ${rank.level}` : "Level X"}
-                  <span class="rank-name">{rank.locked ? "???" : `${rank.letter} · ${rank.name}`}</span>
+                  {rank.locked ? `${rank.letter}-Class` : `${rank.letter}-Class · ${rank.name}`}
+                  <span class="rank-name">{rank.level ? `Level ${rank.level}` : "???"}</span>
                 </h3>
                 <ul>
                   {rank.requirements.map((req) => (

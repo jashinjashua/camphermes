@@ -241,9 +241,14 @@ Phases run 1 → 2 → 3 in order; 4 and 5 may overlap with 3.
 - Results below the Level 1 minimums get "E-Rank · Civilian" instead of a
   bare "no rank" message — still no camp level, but a shareable (and
   roastable) card.
-- Ranks are cumulative: the awarded rank is the highest level whose
-  requirements are met along with every level below it. Meeting Level 4
-  numbers while failing a Level 1 minimum does not award A-Rank.
+- Scoring is satisfaction-based, not all-minimums (changed after testing:
+  the strict rule felt draconian). Each requirement contributes
+  min(value / minimum, 1) and a level passes at 80% average, checked
+  cumulatively from Level 1 up. One weak movement lowers the average
+  instead of vetoing the class; several weak movements still demote.
+- The tier word in the UI is "Class" (D-Class · Recruit), with the camp
+  booking levels (Level 1-5) shown as the secondary label. The test keeps
+  the Hero Rank Test name.
 - The working rank names (D Recruit, C Disciple, B Warrior, A Demigod,
   S Olympian) are implemented as defaults in `src/data/levels.json`; the
   story-poll can rename them with a one-line change.

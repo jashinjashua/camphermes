@@ -7,7 +7,6 @@ import {
   emptyAnswers,
   powerLevel,
   score,
-  scoredRanks,
 } from "../lib/scoring";
 import { decodeAnswers, encodeAnswers } from "../lib/result-url";
 
@@ -37,15 +36,22 @@ describe("rank boundaries", () => {
       expect(result.level).toBe(level);
       expect(result.letter).toBe(letters[level]);
     });
-
-    it(`drops below ${letters[level]} when one requirement is one short`, () => {
-      const short = { ...levelAnswers[level] };
-      const rank = scoredRanks.find((r) => r.level === level)!;
-      const req = rank.requirements.find((r) => r.metric && r.min)!;
-      short[req.metric as keyof Answers] = (req.min ?? 1) - 1;
-      expect(score(short).level).toBeLessThan(level);
-    });
   }
+
+  it("keeps the class when one requirement is slightly short", () => {
+    const short = { ...levelAnswers[3], situps: 70 };
+    expect(score(short).level).toBe(3);
+  });
+
+  it("keeps the class when one movement is missing but the rest are strong", () => {
+    const noMuscleUps = { ...levelAnswers[3], muscleups: 0 };
+    expect(score(noMuscleUps).level).toBe(3);
+  });
+
+  it("demotes when several requirements fail", () => {
+    const weak = { ...levelAnswers[2], handstand: 0, plank: 0, run: 0 };
+    expect(score(weak).level).toBeLessThan(2);
+  });
 
   it("caps at S even far above the Level 5 minimums", () => {
     const monster: Answers = { ...levelAnswers[5], pushups: 300, situps: 200, run: 42 };
@@ -55,9 +61,9 @@ describe("rank boundaries", () => {
     expect(result.gaps).toEqual([]);
   });
 
-  it("ranks are cumulative: meeting Level 4 numbers without Level 1 dips is unranked", () => {
+  it("one missing lower-level movement no longer vetoes a strong athlete", () => {
     const gap: Answers = { ...levelAnswers[4], dips: 0 };
-    expect(score(gap).level).toBe(0);
+    expect(score(gap).level).toBe(4);
   });
 });
 

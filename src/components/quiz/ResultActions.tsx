@@ -31,8 +31,8 @@ export default function ResultActions({ result, answers, onRetake }: Props) {
     }
   };
 
-  const applyHref = result.level > 0 ? "/#contact" : "/#ranks";
-  const applyLabel = result.level > 0 ? `Apply for a Level ${result.level} camp` : "See the camp levels";
+  const applyHref = result.level > 0 ? "/#contact" : "/#classes";
+  const applyLabel = result.level > 0 ? `Apply for a Level ${result.level} camp` : "See the camp classes";
 
   return (
     <div class="result-actions">

@@ -43,7 +43,7 @@ export default function ResultCard({ result, animate = true }: Props) {
       </div>
 
       <div class="result-head">
-        <div class="result-letter" aria-label={`Rank ${result.letter}`}>
+        <div class="result-letter" aria-label={`Class ${result.letter}`}>
           {result.letter}
         </div>
         <div class="result-title">
@@ -63,7 +63,7 @@ export default function ResultCard({ result, animate = true }: Props) {
         {result.nextLetter ? (
           <>
             <p class="quest-title">
-              QUEST → {result.nextLetter}-RANK · {result.nextName}
+              QUEST → {result.nextLetter}-CLASS · {result.nextName}
             </p>
             <ul>
               {result.gaps.slice(0, 4).map((gap) => (
@@ -76,7 +76,7 @@ export default function ResultCard({ result, animate = true }: Props) {
           </>
         ) : (
           <p class="quest-title quest-locked">
-            NEXT → {lockedRank?.letter ?? "X"}-RANK · ??? The test cannot take you there.
+            NEXT → {lockedRank?.letter ?? "X"}-CLASS · ??? The test cannot take you there.
           </p>
         )}
       </div>

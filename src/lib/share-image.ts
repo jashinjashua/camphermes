@@ -113,7 +113,7 @@ export function renderShareImage(result: Result): HTMLCanvasElement {
   ctx.font = body(30, 700);
   const questY = 1130;
   if (result.nextLetter) {
-    ctx.fillText(`QUEST → ${result.nextLetter}-RANK · ${result.nextName?.toUpperCase()}`, 76, questY);
+    ctx.fillText(`QUEST → ${result.nextLetter}-CLASS · ${result.nextName?.toUpperCase()}`, 76, questY);
     ctx.font = body(28);
     const gaps = result.gaps.slice(0, 3);
     gaps.forEach((gap, i) => {
@@ -122,7 +122,7 @@ export function renderShareImage(result: Result): HTMLCanvasElement {
       ctx.fillText(`${gap.label}: ${value}`, 76, questY + 48 + i * 42);
     });
   } else {
-    ctx.fillText("NEXT → X-RANK · ??? THE TEST CANNOT TAKE YOU THERE.", 76, questY);
+    ctx.fillText("NEXT → X-CLASS · ??? THE TEST CANNOT TAKE YOU THERE.", 76, questY);
   }
 
   // Footer

@@ -20,8 +20,8 @@ const { letter, name } = Astro.props;
 ---
 
 <TestLayout
-  title={`${letter}-Rank · ${name} · Hero Rank Test`}
-  description={`A ${letter}-Rank result from the Camp Hermes Hero Rank Test. What's your power level?`}
+  title={`${letter}-Class · ${name} · Hero Rank Test`}
+  description={`A ${letter}-Class result from the Camp Hermes Hero Rank Test. What's your power level?`}
   ogImage={`/og/rank-${letter.toLowerCase()}.png`}
 >
   <ResultViewer client:only="preact" />

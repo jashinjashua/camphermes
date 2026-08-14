@@ -102,16 +102,30 @@ export function emptyAnswers(): Answers {
   return Object.fromEntries(METRIC_ORDER.map((m) => [m, 0])) as Answers;
 }
 
-function meets(rank: Rank, answers: Answers): boolean {
-  return rank.requirements.every(
-    (req) => !req.metric || answers[req.metric as MetricId] >= (req.min ?? 0),
-  );
+// A level passes on average satisfaction, not on meeting every minimum:
+// each requirement contributes min(value / min, 1) and the level is awarded
+// at 80%. One weak movement lowers the average instead of vetoing the class.
+const PASS = 0.8;
+
+export function levelSatisfaction(rank: Rank, answers: Answers): number {
+  const mins = new Map<MetricId, number>();
+  for (const req of rank.requirements) {
+    if (!req.metric || req.min === undefined) continue;
+    const m = req.metric as MetricId;
+    mins.set(m, Math.max(mins.get(m) ?? 0, req.min));
+  }
+  if (!mins.size) return 0;
+  let total = 0;
+  for (const [m, min] of mins) {
+    total += Math.min(answers[m] / min, 1);
+  }
+  return total / mins.size;
 }
 
 function achievedLevel(answers: Answers): number {
   let level = 0;
   for (const rank of scoredRanks) {
-    if (meets(rank, answers)) level = rank.level ?? level;
+    if (levelSatisfaction(rank, answers) >= PASS) level = rank.level ?? level;
     else break;
   }
   return level;
