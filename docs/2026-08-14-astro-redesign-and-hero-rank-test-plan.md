@@ -156,8 +156,19 @@ Exit criteria: same site, same URL, modern stack, better Lighthouse scores.
 4. Sharing: canvas-rendered PNG of the status card plus the Web Share API;
    the result is also encoded in the URL so links reproduce the card;
    per-rank Open Graph images.
-5. Result saved to localStorage; the homepage shows "Your rank: C — Retest"
-   to returning visitors.
+5. Persistence and retakes (localStorage, per browser):
+   - Finishing the test saves the result (rank, stats, power level, date).
+     Reloading the test page shows the saved result card with a "Retake the
+     test" button instead of question 1.
+   - Retaking pushes the old result into a history array; an abandoned
+     retake leaves the previous result standing.
+   - A finished retake shows the delta against the previous result
+     ("Power Level 2,340 → 2,580") and a RANK UP moment on a tier change —
+     the before/after is the strongest share format the product has.
+   - Precedence on the test page: URL-encoded result (a shared link) wins
+     and renders with a "Take the test yourself" call to action; otherwise
+     the saved result; otherwise the quiz.
+   - The homepage shows "Your rank: C — Retake" to returning visitors.
 
 ### Phase 4 — Character art and polish
 
@@ -193,6 +204,11 @@ Phases run 1 → 2 → 3 in order; 4 and 5 may overlap with 3.
 - The test's URL: `/rank`, `/test`, or `/exam`.
 - Final umbrella terminology for the training style ("hybrid athleticism"
   or something else).
+- Optional name/handle on the result card (undecided). Proposal: one
+  optional field shown after the result, never before question 1; printed
+  on the card and share image, stored in localStorage only, never in the
+  shared URL, and used to prefill the apply form. No email capture at the
+  result screen either way.
 
 ## Acceptance criteria
 
@@ -214,6 +230,10 @@ Phases run 1 → 2 → 3 in order; 4 and 5 may overlap with 3.
   tap from the first viewport.
 - The result screen fits one phone viewport, and a raw screenshot of it
   contains rank, rank name, power level, radar, and the Camp Hermes mark.
+- Reloading the test page after finishing shows the saved result with a
+  retake option; a finished retake shows the delta against the previous
+  result; a shared URL always renders its own card regardless of the
+  viewer's saved result.
 
 ## Verification steps
 
