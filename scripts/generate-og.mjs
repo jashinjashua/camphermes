@@ -67,8 +67,9 @@ for (const rank of RANKS) {
     .toFile(path.join(outDir, `rank-${rank.letter.toLowerCase()}.png`));
 }
 
-await sharp(path.join(root, "src", "assets", "site", "img-01.jpg"))
-  .resize(W, H, { fit: "cover", position: "attention" })
+await sharp(path.join(root, "src", "assets", "hero", "source.png"))
+  .extract({ left: 0, top: 60, width: 1024, height: 538 })
+  .resize(W, H, { fit: "cover" })
   .png()
   .toFile(path.join(outDir, "default.png"));
 

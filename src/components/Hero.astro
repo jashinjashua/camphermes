@@ -1,12 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import figureImage from "../assets/hero/figure.png";
+import artworkImage from "../assets/hero/source.png";
 import ambientImage from "../assets/hero/ambient.jpg";
 
-// Layered hero built from the original artwork, separated by pixel values:
-// ambient background → volumetric beam → figure cutout (the beam shines
-// through the gaps between feathers) → faint front haze → material-masked
-// light passes (skin, wings, metal, laurel) → drifting dust.
+// Layered hero, Photoshop-style: the artwork stays whole (black parts and
+// its painted glow intact) and light is applied with selective blend modes
+// per layer — the beam and dust are `screen`ed on (black vanishes), the
+// material passes are masked to skin / wings / metal pixels. The frame
+// shows the figure from the dumbbells up; the bottom fades into the page.
+const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
 ---
 
 <section id="home" class="hero">
@@ -14,11 +16,30 @@ import ambientImage from "../assets/hero/ambient.jpg";
     src={ambientImage}
     alt=""
     class="hero-ambient"
-    widths={[768, 1280, 1920]}
+    widths={[768, 1280]}
     sizes="100vw"
     loading="eager"
-    fetchpriority="high"
   />
+
+  <div class="hero-art" aria-hidden="true" style={`--visible: ${VISIBLE}`}>
+    <Image
+      src={artworkImage}
+      alt=""
+      class="art-img"
+      widths={[640, 900, 1200]}
+      sizes="(max-width: 860px) 120vw, 60vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="pass pass-skin"></div>
+    <div class="pass pass-wings"></div>
+    <div class="pass pass-metal"></div>
+    <img src="/hero/glint.png" alt="" class="laurel-glint" loading="lazy" />
+    <img src="/hero/light-beam.jpg" alt="" class="beam" loading="eager" />
+    <img src="/hero/dust.png" alt="" class="dust" loading="lazy" />
+  </div>
+
+  <div class="hero-scrim" aria-hidden="true"></div>
 
   <div class="hero-inner container">
     <div class="hero-copy">
@@ -32,27 +53,6 @@ import ambientImage from "../assets/hero/ambient.jpg";
         <a href="#ranks" class="btn btn-ghost">See camp levels</a>
       </div>
     </div>
-
-    <div class="hero-art" aria-hidden="true">
-      <img src="/hero/light-beam.jpg" alt="" class="beam beam-back" loading="eager" />
-      <div class="fig">
-        <Image
-          src={figureImage}
-          alt=""
-          class="fig-img"
-          widths={[480, 720, 1024]}
-          sizes="(max-width: 860px) 90vw, 40vw"
-          loading="eager"
-          fetchpriority="high"
-        />
-        <div class="pass pass-skin"></div>
-        <div class="pass pass-wings"></div>
-        <div class="pass pass-metal"></div>
-        <img src="/hero/glint.png" alt="" class="laurel-glint" loading="lazy" />
-      </div>
-      <img src="/hero/light-beam.jpg" alt="" class="beam beam-front" loading="lazy" />
-      <img src="/hero/dust.png" alt="" class="dust" loading="lazy" />
-    </div>
   </div>
 </section>
 
@@ -61,7 +61,7 @@ import ambientImage from "../assets/hero/ambient.jpg";
     position: relative;
     min-height: 92svh;
     display: flex;
-    align-items: stretch;
+    align-items: center;
     overflow: hidden;
     background: var(--bg);
   }
@@ -73,102 +73,55 @@ import ambientImage from "../assets/hero/ambient.jpg";
     height: 108%;
     object-fit: cover;
     object-position: center 20%;
-    /* Blurred into a color wash: the artwork echoes as depth, not a clone */
-    filter: blur(42px) brightness(0.5) saturate(1.15);
+    filter: blur(46px) brightness(0.45) saturate(1.15);
     animation: kenburns 38s ease-in-out infinite alternate;
   }
 
-  .hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to right,
-      rgba(10, 11, 13, 0.88) 0%,
-      rgba(10, 11, 13, 0.55) 45%,
-      rgba(10, 11, 13, 0.1) 100%
-    );
-    pointer-events: none;
-  }
-
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    padding-top: 72px;
-  }
-
-  .hero-sub {
-    max-width: 480px;
-    margin-top: 18px;
-    color: #b9c0ca;
-    font-size: 1.1rem;
-  }
-
-  .hero-ctas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 28px;
-  }
-
-  /* --- Layered artwork ---------------------------------------------------- */
+  /* --- The artwork panel, whole and unclipped by alpha ---------------------- */
 
   .hero-art {
-    position: relative;
-    height: min(84svh, 760px);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-  }
-
-  .fig {
-    position: relative;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 2vw;
+    height: calc(92svh / var(--visible));
     aspect-ratio: 1024 / 1536;
-    z-index: 2;
-    animation: figure-drift 16s ease-in-out infinite;
+    /* Fade the panel's side edges into the ambient so it never reads as a
+       pasted rectangle; the artwork's own dark ground does the rest. */
+    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 12%,
+      black 88%,
+      transparent 100%
+    );
+    animation: figure-drift 18s ease-in-out infinite;
   }
 
-  .fig-img {
+  .art-img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 0 34px rgba(255, 138, 46, 0.18));
+    object-fit: cover;
   }
 
   .beam {
     position: absolute;
-    top: -14%;
+    top: -1.5%;
     left: 50%;
-    width: 165%;
+    width: 150%;
     max-width: none;
-    mix-blend-mode: screen;
+    mix-blend-mode: screen; /* black plate disappears, only light lands */
     transform-origin: top center;
     pointer-events: none;
-    /* Fade the plate's own edges so they never show as seams */
-    mask-image: radial-gradient(ellipse 46% 46% at 50% 32%, black 52%, transparent 76%);
-    -webkit-mask-image: radial-gradient(ellipse 46% 46% at 50% 32%, black 52%, transparent 76%);
-  }
-
-  .beam-back {
-    z-index: 1;
-    opacity: 0.95;
+    opacity: 0.9;
+    /* Fade side and bottom plate edges but keep the source at full strength
+       so the light meets the top of the viewport with no gap */
+    mask-image: radial-gradient(ellipse 50% 56% at 50% 18%, black 58%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 50% 56% at 50% 18%, black 58%, transparent 80%);
     animation: beam-sway 17s ease-in-out infinite;
   }
 
-  .beam-front {
-    z-index: 3;
-    opacity: 0.22;
-    animation: beam-sway 17s ease-in-out infinite reverse;
-  }
-
-  /* Material light passes: each is the beam texture (or artwork heat) let
-     through only where that material's pixels are. */
+  /* Material light passes, masked to the artwork's own pixel classes */
   .pass {
     position: absolute;
     inset: 0;
@@ -176,7 +129,6 @@ import ambientImage from "../assets/hero/ambient.jpg";
     mask-size: 100% 100%;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-size: 100% 100%;
-    mix-blend-mode: screen;
     pointer-events: none;
   }
 
@@ -185,7 +137,8 @@ import ambientImage from "../assets/hero/ambient.jpg";
     -webkit-mask-image: url("/hero/mask-skin.png");
     background-image: url("/hero/light-beam.jpg");
     background-size: 300% 200%;
-    opacity: 0.5;
+    mix-blend-mode: screen;
+    opacity: 0.45;
     animation: skin-crawl 13s ease-in-out infinite alternate;
   }
 
@@ -202,15 +155,16 @@ import ambientImage from "../assets/hero/ambient.jpg";
     -webkit-mask-image: url("/hero/mask-metal.png");
     background-image: url("/hero/light-beam.jpg");
     background-size: 340% 260%;
+    mix-blend-mode: screen;
     opacity: 0;
     animation: metal-glint 14s ease-in-out infinite;
   }
 
   .laurel-glint {
     position: absolute;
-    top: 4.2%;
-    left: 57%;
-    width: 13%;
+    top: 6%;
+    left: 52%;
+    width: 12%;
     mix-blend-mode: screen;
     opacity: 0;
     animation: laurel-ping 9s ease-in-out infinite;
@@ -218,18 +172,58 @@ import ambientImage from "../assets/hero/ambient.jpg";
 
   .dust {
     position: absolute;
-    bottom: -6%;
-    left: 12%;
-    width: 76%;
+    top: 8%;
+    left: 14%;
+    width: 72%;
     max-width: none;
-    z-index: 4;
     mix-blend-mode: screen;
     opacity: 0.5;
     animation: dust-drift 46s linear infinite;
     pointer-events: none;
   }
 
-  /* --- Motion --------------------------------------------------------------- */
+  /* --- Scrim and copy -------------------------------------------------------- */
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, var(--bg) 0%, rgba(10, 11, 13, 0.4) 16%, rgba(10, 11, 13, 0) 34%),
+      linear-gradient(
+        to right,
+        rgba(10, 11, 13, 0.9) 0%,
+        rgba(10, 11, 13, 0.5) 42%,
+        rgba(10, 11, 13, 0) 68%
+      );
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding-top: 72px;
+  }
+
+  .hero-copy {
+    max-width: 520px;
+  }
+
+  .hero-sub {
+    max-width: 480px;
+    margin-top: 18px;
+    color: #b9c0ca;
+    font-size: 1.1rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  /* --- Motion ---------------------------------------------------------------- */
 
   @keyframes kenburns {
     from {
@@ -246,19 +240,19 @@ import ambientImage from "../assets/hero/ambient.jpg";
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-8px);
+      transform: translateY(-7px);
     }
   }
 
   @keyframes beam-sway {
     0%,
     100% {
-      transform: translateX(-50%) rotate(-1.6deg);
-      opacity: 0.8;
+      transform: translateX(-50%) rotate(-1.4deg);
+      opacity: 0.72;
     }
     50% {
-      transform: translateX(-50%) rotate(1.6deg);
-      opacity: 1;
+      transform: translateX(-50%) rotate(1.4deg);
+      opacity: 0.95;
     }
   }
 
@@ -274,10 +268,10 @@ import ambientImage from "../assets/hero/ambient.jpg";
   @keyframes wing-ember {
     0%,
     100% {
-      opacity: 0.15;
+      opacity: 0.12;
     }
     50% {
-      opacity: 0.55;
+      opacity: 0.5;
     }
   }
 
@@ -316,18 +310,17 @@ import ambientImage from "../assets/hero/ambient.jpg";
 
   @keyframes dust-drift {
     from {
-      transform: translateY(4%);
+      transform: translateY(3%);
     }
     to {
-      transform: translateY(-10%);
+      transform: translateY(-8%);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-ambient,
-    .fig,
-    .beam-back,
-    .beam-front,
+    .hero-art,
+    .beam,
     .pass,
     .laurel-glint,
     .dust {
@@ -343,28 +336,31 @@ import ambientImage from "../assets/hero/ambient.jpg";
       align-items: flex-end;
     }
 
-    .hero-inner {
-      grid-template-columns: 1fr;
-      padding-top: 76px;
-      gap: 0;
-    }
-
     .hero-art {
-      order: -1;
-      height: min(52svh, 480px);
+      right: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      height: auto;
+      width: 124vw;
+      animation: none;
+      /* Cut at the weights on mobile too: fade out below ~61% of the art */
+      mask-image: linear-gradient(to bottom, black 52%, transparent 74%);
+      -webkit-mask-image: linear-gradient(to bottom, black 52%, transparent 74%);
     }
 
-    .hero::after {
+    .hero-scrim {
       background: linear-gradient(
         to bottom,
-        rgba(10, 11, 13, 0.35) 0%,
-        rgba(10, 11, 13, 0.2) 45%,
-        rgba(10, 11, 13, 0.92) 100%
+        rgba(10, 11, 13, 0.15) 0%,
+        rgba(10, 11, 13, 0.05) 40%,
+        rgba(10, 11, 13, 0.95) 78%,
+        var(--bg) 100%
       );
     }
 
-    .hero-copy {
-      padding-bottom: 36px;
+    .hero-inner {
+      padding-top: 76vw;
+      padding-bottom: 40px;
     }
   }
 </style>
