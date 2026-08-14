@@ -1,6 +1,5 @@
 ---
 import { Image } from "astro:assets";
-import artworkImage from "../assets/hero/source.png";
 import ambientImage from "../assets/hero/ambient.jpg";
 
 // Layered hero. The artwork stays whole (black parts and painted glow
@@ -22,15 +21,7 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
   />
 
   <div class="hero-art" aria-hidden="true" style={`--visible: ${VISIBLE}`}>
-    <Image
-      src={artworkImage}
-      alt=""
-      class="art-img"
-      widths={[640, 900, 1200]}
-      sizes="(max-width: 860px) 120vw, 60vw"
-      loading="eager"
-      fetchpriority="high"
-    />
+    <img src="/hero/figure.svg" alt="" class="art-img" loading="eager" fetchpriority="high" />
     <div class="pass pass-skin"><img src="/hero/light-beam.jpg" alt="" class="tex tex-skin" /></div>
     <div class="pass pass-wings"></div>
     <div class="pass pass-metal"><img src="/hero/light-beam.jpg" alt="" class="tex tex-metal" /></div>
