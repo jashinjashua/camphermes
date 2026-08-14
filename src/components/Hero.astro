@@ -104,12 +104,12 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     mix-blend-mode: screen; /* black plate disappears, only light lands */
     transform-origin: top center;
     pointer-events: none;
-    opacity: 0.9;
+    opacity: 1;
     /* Fade side and bottom plate edges but keep the source at full strength
        so the light meets the top of the viewport with no gap */
     mask-image: radial-gradient(ellipse 50% 56% at 50% 18%, black 58%, transparent 80%);
     -webkit-mask-image: radial-gradient(ellipse 50% 56% at 50% 18%, black 58%, transparent 80%);
-    animation: beam-sway 17s ease-in-out infinite;
+    animation: beam-sway 13.5s ease-in-out infinite;
   }
 
   /* Material light passes, masked to the artwork's own pixel classes */
@@ -140,11 +140,11 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     mask-image: url("/hero/mask-skin.png");
     -webkit-mask-image: url("/hero/mask-skin.png");
     mix-blend-mode: screen;
-    opacity: 0.45;
+    opacity: 0.56;
   }
 
   .tex-skin {
-    animation: skin-crawl 13s ease-in-out infinite alternate;
+    animation: skin-crawl 10.5s ease-in-out infinite alternate;
   }
 
   .pass-wings {
@@ -152,7 +152,7 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     -webkit-mask-image: url("/hero/mask-wings.png");
     background: #ff7a2a;
     mix-blend-mode: overlay;
-    animation: wing-ember 9s ease-in-out infinite;
+    animation: wing-ember 7.2s ease-in-out infinite;
   }
 
   .pass-metal {
@@ -160,11 +160,11 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     -webkit-mask-image: url("/hero/mask-metal.png");
     mix-blend-mode: screen;
     opacity: 0;
-    animation: metal-glint 14s ease-in-out infinite;
+    animation: metal-glint 11s ease-in-out infinite;
   }
 
   .tex-metal {
-    animation: metal-slide 14s ease-in-out infinite;
+    animation: metal-slide 11s ease-in-out infinite;
   }
 
   .laurel-glint {
@@ -174,7 +174,7 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     width: 12%;
     mix-blend-mode: screen;
     opacity: 0;
-    animation: laurel-ping 9s ease-in-out infinite;
+    animation: laurel-ping 7.2s ease-in-out infinite;
   }
 
   .dust {
@@ -184,8 +184,8 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     width: 72%;
     max-width: none;
     mix-blend-mode: screen;
-    opacity: 0.5;
-    animation: dust-drift 46s linear infinite;
+    opacity: 0.62;
+    animation: dust-drift 37s linear infinite;
     pointer-events: none;
   }
 
@@ -255,11 +255,11 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     0%,
     100% {
       transform: translateX(-50%) rotate(-1.4deg);
-      opacity: 0.72;
+      opacity: 0.9;
     }
     50% {
       transform: translateX(-50%) rotate(1.4deg);
-      opacity: 0.95;
+      opacity: 1;
     }
   }
 
@@ -275,10 +275,10 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
   @keyframes wing-ember {
     0%,
     100% {
-      opacity: 0.12;
+      opacity: 0.15;
     }
     50% {
-      opacity: 0.5;
+      opacity: 0.62;
     }
   }
 
@@ -289,7 +289,7 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
       opacity: 0;
     }
     82% {
-      opacity: 0.75;
+      opacity: 0.94;
     }
     90% {
       opacity: 0;
@@ -315,7 +315,7 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
       transform: scale(0.6);
     }
     88% {
-      opacity: 0.9;
+      opacity: 1;
       transform: scale(1);
     }
     94% {
