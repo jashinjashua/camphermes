@@ -18,12 +18,11 @@ function rankImage(name: string): ImageMetadata | null {
     <div class="section-header reveal">
       <h2>Camp classes</h2>
       <p class="lead">
-        For each camp level, there are specific physical exercises and minimum repetitions you must
-        be able to complete before applying. Smoking, alcohol, drugs, chips, and soda are
-        prohibited.
+        For each class, there are specific physical exercises and minimum repetitions you must be
+        able to complete before applying. Smoking, alcohol, drugs, chips, and soda are prohibited.
       </p>
       <p class="lead">
-        Make sure you can complete the required numbers for the level you're interested in. Then
+        Make sure you can complete the required numbers for the class you're interested in. Then
         click Apply and contact our team. The
         <a href="/rank/" class="text-link">Hero Rank Test</a> tells you where you stand.
       </p>
@@ -42,7 +41,7 @@ function rankImage(name: string): ImageMetadata | null {
                 <div class="rank-media">
                   <Image
                     src={image}
-                    alt={rank.level ? `Level ${rank.level}` : "Level X"}
+                    alt={`${rank.letter}-Class`}
                     widths={[320, 480]}
                     sizes="(max-width: 600px) 80vw, 320px"
                   />
@@ -51,8 +50,8 @@ function rankImage(name: string): ImageMetadata | null {
               )}
               <div class="rank-body">
                 <h3>
-                  {rank.locked ? `${rank.letter}-Class` : `${rank.letter}-Class · ${rank.name}`}
-                  <span class="rank-name">{rank.level ? `Level ${rank.level}` : "???"}</span>
+                  {`${rank.letter}-Class`}
+                  <span class="rank-name">{rank.locked ? "???" : rank.name}</span>
                 </h3>
                 <ul>
                   {rank.requirements.map((req) => (
