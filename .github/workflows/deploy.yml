@@ -46,3 +46,10 @@ jobs:
           git commit -m "deploy: publish built site [skip ci]"
           git pull --rebase origin main
           git push
+      - name: Request a Pages build
+        # Pushes made with GITHUB_TOKEN do not trigger the Pages build
+        # workflow, so ask for one explicitly.
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"
