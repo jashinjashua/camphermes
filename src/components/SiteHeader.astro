@@ -1,0 +1,203 @@
+---
+interface Props {
+  current?: string;
+}
+
+const { current = "" } = Astro.props;
+
+const links = [
+  { href: "/#home", id: "home", label: "Home" },
+  { href: "/about/", id: "about", label: "About" },
+  { href: "/#ranks", id: "ranks", label: "Ranks" },
+  { href: "/#gallery", id: "gallery", label: "Gallery" },
+  { href: "/#trainer", id: "trainer", label: "Trainer" },
+  { href: "/#contact", id: "contact", label: "Contact" },
+];
+---
+
+<header class="site-header" id="site-header">
+  <div class="header-inner container">
+    <a href="/" class="brand">
+      <img src="/img/hermes-icon.png" alt="" width="22" height="22" />
+      <span>Camp Hermes</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      {
+        links.map((link) => (
+          <a href={link.href} class:list={["nav-link", { current: link.id === current }]}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header-actions">
+      <a href="/rank/" class="btn btn-primary header-cta">Find your rank</a>
+      <button
+        class="nav-toggle"
+        id="nav-toggle"
+        type="button"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    border-bottom: 1px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .site-header.is-scrolled,
+  body.nav-open .site-header {
+    background: rgba(10, 11, 13, 0.92);
+    backdrop-filter: blur(10px);
+    border-color: var(--border);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 64px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .site-nav {
+    display: flex;
+    gap: 26px;
+  }
+
+  .nav-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .nav-link:hover,
+  .nav-link.current {
+    color: var(--text);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-cta {
+    padding: 9px 18px;
+    font-size: 0.82rem;
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: 0;
+    padding: 10px 4px;
+    cursor: pointer;
+  }
+
+  .nav-toggle span {
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    transition: transform 0.2s ease;
+  }
+
+  @media (max-width: 860px) {
+    .site-nav {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: var(--bg-raised);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 20px 16px;
+      display: none;
+    }
+
+    :global(body.nav-open) .site-nav {
+      display: flex;
+    }
+
+    .nav-link {
+      padding: 12px 0;
+    }
+
+    .nav-toggle {
+      display: flex;
+    }
+
+    :global(body.nav-open) .nav-toggle span:first-child {
+      transform: translateY(4px) rotate(45deg);
+    }
+
+    :global(body.nav-open) .nav-toggle span:last-child {
+      transform: translateY(-4px) rotate(-45deg);
+    }
+  }
+</style>
+
+<script>
+  function initHeader() {
+    const header = document.getElementById("site-header");
+    const toggle = document.getElementById("nav-toggle");
+    const nav = document.getElementById("site-nav");
+    if (!header || !toggle || !nav) return;
+
+    const setScrolled = () => header.classList.toggle("is-scrolled", window.scrollY > 12);
+    setScrolled();
+    window.addEventListener("scroll", setScrolled, { passive: true });
+
+    const close = () => {
+      document.body.classList.remove("nav-open");
+      toggle.setAttribute("aria-expanded", "false");
+    };
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = !document.body.classList.contains("nav-open");
+      document.body.classList.toggle("nav-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+
+    nav.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).closest("a")) close();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!document.body.classList.contains("nav-open")) return;
+      if ((e.target as HTMLElement).closest("#site-nav, #nav-toggle")) return;
+      close();
+    });
+  }
+
+  document.addEventListener("astro:page-load", initHeader);
+</script>

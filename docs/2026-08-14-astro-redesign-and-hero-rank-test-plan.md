@@ -232,6 +232,28 @@ Phases run 1 → 2 → 3 in order; 4 and 5 may overlap with 3.
 - No hand-coded character illustration SVGs.
 - No replacement of EmailJS in this pass.
 
+## Departures from the plan (as implemented)
+
+- The test asks 10 questions, not 7–9: six rep/duration inputs (push-ups,
+  sit-ups, pull-ups, dips, burpees, plank), three skill ladders (handstand,
+  muscle-ups, statics), and the run. Fewer questions would have required
+  merging movements that the level cards score separately.
+- Results below the Level 1 minimums get "E-Rank · Civilian" instead of a
+  bare "no rank" message — still no camp level, but a shareable (and
+  roastable) card.
+- Ranks are cumulative: the awarded rank is the highest level whose
+  requirements are met along with every level below it. Meeting Level 4
+  numbers while failing a Level 1 minimum does not award A-Rank.
+- The working rank names (D Recruit, C Disciple, B Warrior, A Demigod,
+  S Olympian) are implemented as defaults in `src/data/levels.json`; the
+  story-poll can rename them with a one-line change.
+- Quiz interactivity uses Preact islands; the rest of the site is static
+  Astro with small vanilla scripts (gallery filter and lightbox replace
+  Isotope and Magnific, CSS scroll-snap replaces Slick).
+- Open Graph images are generated locally by `npm run og` (sharp) and
+  committed, so CI needs no font setup. They are per-rank; a shared link
+  unfurls with its rank's card.
+
 ## Open questions
 
 - Final rank names for C–S (candidate: Disciple, Warrior, Demigod,

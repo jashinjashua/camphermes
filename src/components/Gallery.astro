@@ -1,0 +1,209 @@
+---
+import { Image, getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+const files = import.meta.glob<{ default: ImageMetadata }>("../assets/gallery/*.jpg", {
+  eager: true,
+});
+
+const categories = ["training", "nature", "travel", "food"] as const;
+
+function categoryOf(path: string): (typeof categories)[number] {
+  const name = path.split("/").pop() ?? "";
+  const match = categories.find((c) => name.startsWith(c));
+  return match ?? "training";
+}
+
+const items = await Promise.all(
+  Object.entries(files)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(async ([path, module]) => ({
+      category: categoryOf(path),
+      image: module.default,
+      full: await getImage({ src: module.default, width: 1600 }),
+    })),
+);
+---
+
+<section class="section" id="gallery">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="kicker">Camp life</p>
+      <h2>Gallery</h2>
+      <p class="lead">Training, nature, travel, and food from camp life.</p>
+    </div>
+
+    <div class="gallery-filters" role="tablist" aria-label="Gallery filters">
+      <button class="gallery-filter is-active" data-filter="all" type="button">All</button>
+      <button class="gallery-filter" data-filter="training" type="button">Training</button>
+      <button class="gallery-filter" data-filter="nature" type="button">Nature</button>
+      <button class="gallery-filter" data-filter="travel" type="button">Travels</button>
+      <button class="gallery-filter" data-filter="food" type="button">Food</button>
+    </div>
+
+    <div class="gallery-grid" id="gallery-grid">
+      {
+        items.map((item) => (
+          <button
+            class="gallery-item"
+            type="button"
+            data-category={item.category}
+            data-full={item.full.src}
+            aria-label={`View ${item.category} photo`}
+          >
+            <Image
+              src={item.image}
+              alt={`Camp Hermes — ${item.category}`}
+              widths={[320, 480, 640]}
+              sizes="(max-width: 600px) 50vw, (max-width: 960px) 33vw, 270px"
+              loading="lazy"
+            />
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <dialog class="lightbox" id="gallery-lightbox">
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close">×</button>
+    <img id="lightbox-img" src="" alt="Camp Hermes" />
+  </dialog>
+</section>
+
+<style>
+  .gallery-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
+  .gallery-filter {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+
+  .gallery-filter.is-active {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--bg);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .gallery-item {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.04);
+    opacity: 0.85;
+  }
+
+  .gallery-item.is-hidden {
+    display: none;
+  }
+
+  .lightbox {
+    background: rgba(10, 11, 13, 0.95);
+    border: 0;
+    padding: 24px;
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .lightbox img {
+    max-width: min(1200px, 92vw);
+    max-height: 88vh;
+    margin: 0 auto;
+    object-fit: contain;
+    height: 100%;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    background: none;
+    border: 0;
+    color: var(--text);
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  @media (max-width: 960px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<script>
+  function initGallery() {
+    const grid = document.getElementById("gallery-grid");
+    const lightbox = document.getElementById("gallery-lightbox") as HTMLDialogElement | null;
+    const lightboxImg = document.getElementById("lightbox-img") as HTMLImageElement | null;
+    const closeBtn = document.getElementById("lightbox-close");
+    if (!grid || !lightbox || !lightboxImg || !closeBtn) return;
+
+    document.querySelectorAll<HTMLButtonElement>(".gallery-filter").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".gallery-filter").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const filter = btn.dataset.filter;
+        grid.querySelectorAll<HTMLElement>(".gallery-item").forEach((item) => {
+          item.classList.toggle("is-hidden", filter !== "all" && item.dataset.category !== filter);
+        });
+      });
+    });
+
+    grid.addEventListener("click", (e) => {
+      const item = (e.target as HTMLElement).closest<HTMLElement>(".gallery-item");
+      if (!item?.dataset.full) return;
+      lightboxImg.src = item.dataset.full;
+      lightbox.showModal();
+    });
+
+    closeBtn.addEventListener("click", () => lightbox.close());
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) lightbox.close();
+    });
+  }
+
+  document.addEventListener("astro:page-load", initGallery);
+</script>
