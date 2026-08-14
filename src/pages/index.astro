@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import Hero from "../components/Hero.astro";
+import TestTeaser from "../components/TestTeaser.astro";
+import ValueTeaser from "../components/ValueTeaser.astro";
+import Ranks from "../components/Ranks.astro";
+import Gallery from "../components/Gallery.astro";
+import Trainer from "../components/Trainer.astro";
+import Contact from "../components/Contact.astro";
+---
+
+<Layout title="Camp Hermes" description="Where Men Are Forged">
+  <SiteHeader current="home" />
+  <main>
+    <Hero />
+    <TestTeaser />
+    <ValueTeaser />
+    <Ranks />
+    <Gallery />
+    <Trainer />
+    <Contact />
+  </main>
+  <SiteFooter />
+</Layout>

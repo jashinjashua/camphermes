@@ -1,0 +1,28 @@
+---
+import TestLayout from "../../layouts/TestLayout.astro";
+import ResultViewer from "../../components/quiz/ResultViewer";
+import { scoredRanks, unranked } from "../../lib/scoring";
+
+export function getStaticPaths() {
+  const entries = [unranked, ...scoredRanks.map((r) => ({ letter: r.letter, name: r.name }))];
+  return entries.map((entry) => ({
+    params: { letter: entry.letter.toLowerCase() },
+    props: { letter: entry.letter, name: entry.name },
+  }));
+}
+
+interface Props {
+  letter: string;
+  name: string;
+}
+
+const { letter, name } = Astro.props;
+---
+
+<TestLayout
+  title={`${letter}-Class · ${name} · Hero Rank Test`}
+  description={`A ${letter}-Class result from the Camp Hermes Hero Rank Test. What's your power level?`}
+  ogImage={`/og/rank-${letter.toLowerCase()}.png`}
+>
+  <ResultViewer client:only="preact" />
+</TestLayout>

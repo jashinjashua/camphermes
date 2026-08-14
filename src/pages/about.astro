@@ -1,0 +1,148 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import aboutImage from "../assets/site/img-home-01.jpg";
+---
+
+<Layout title="About · Camp Hermes" description="Where Men Are Forged">
+  <SiteHeader current="about" />
+  <main>
+    <section class="section page-hero" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div>
+            <h1>Welcome to Camp Hermes</h1>
+            <p class="lead">Built for men who want to evolve into their strongest form.</p>
+            <p>
+              Luffy, Naruto, Goku, Baki — all of them went through intense training camps to level
+              up and become stronger. Camp Hermes is designed for brutal men who want to push their
+              limits. Surrounded by stunning nature, this camp offers top-tier training, the finest
+              quality meat, and an unforgettable experience alongside other like-minded men.
+            </p>
+            <p>
+              Our goal at Camp Hermes is to take your body to its highest potential. We focus on
+              coordination, strength, explosive power, balance, and — most importantly — willpower.
+              Our mission is simple: to evolve you into your most brutal and powerful form.
+            </p>
+            <p>Camp Hermes is not for everyone. But if you are ready to become a brutal man, welcome home.</p>
+            <p class="signature">— Hermes / God of Athletes and Sports</p>
+          </div>
+          <Image
+            src={aboutImage}
+            alt="Camp Hermes"
+            class="about-media"
+            widths={[480, 760]}
+            sizes="(max-width: 860px) 100vw, 480px"
+          />
+        </div>
+
+        <div class="info-grid">
+          <article class="info-card reveal">
+            <h3>Camp Dates</h3>
+            <ul>
+              <li>C-Class camp runs from August 31st to September 5th in Malaysia</li>
+              <li>A-Class camp runs from November 10th to November 17th in Dubai</li>
+            </ul>
+          </article>
+          <article class="info-card reveal">
+            <h3>What you get</h3>
+            <ul>
+              <li>Pick up from the airport with a Luxury Jeep and bring to the camp</li>
+              <li>Wake up 05.00 am</li>
+              <li>Training: 3× (morning exercise, real training before dinner, + evening training)</li>
+              <li>Pool (some exercises with dumbbells, fresh)</li>
+              <li>Recording individual exercises on the board during the camp</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="about-cta">
+          <a href="/rank/" class="btn btn-primary">Find your Hero Rank</a>
+          <a href="/#contact" class="btn btn-ghost">Apply now</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .page-hero {
+    padding-top: 140px;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .about-grid p {
+    margin-top: 16px;
+    color: var(--muted);
+  }
+
+  .about-grid .lead {
+    color: var(--text);
+  }
+
+  .signature {
+    font-style: italic;
+  }
+
+  .about-media {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    position: sticky;
+    top: 90px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 56px;
+  }
+
+  .info-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 26px;
+  }
+
+  .info-card h3 {
+    margin-bottom: 14px;
+  }
+
+  .info-card ul {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    color: var(--muted);
+  }
+
+  .info-card li::before {
+    content: "— ";
+    color: var(--accent);
+  }
+
+  .about-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 860px) {
+    .about-grid,
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

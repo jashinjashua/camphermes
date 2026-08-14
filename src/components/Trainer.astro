@@ -1,0 +1,278 @@
+---
+import { Image, getImage } from "astro:assets";
+import profileImage from "../assets/trainer/jashin-profile.jpg";
+import portraitImage from "../assets/trainer/portrait.jpg";
+import ig01 from "../assets/trainer/ig-01.jpg";
+import ig02 from "../assets/trainer/ig-02.jpg";
+import ig03 from "../assets/trainer/ig-03.jpg";
+import ig04 from "../assets/trainer/ig-04.jpg";
+
+const shots = await Promise.all(
+  [
+    { src: portraitImage, alt: "Jashin training portrait" },
+    { src: ig01, alt: "Jashin performance clip" },
+    { src: ig02, alt: "Jashin performance clip" },
+    { src: ig03, alt: "Jashin performance clip" },
+    { src: ig04, alt: "Jashin performance clip" },
+  ].map(async (shot) => ({
+    ...shot,
+    thumb: await getImage({ src: shot.src, width: 160 }),
+    full: await getImage({ src: shot.src, width: 900 }),
+  })),
+);
+---
+
+<section class="section section-alt" id="trainer">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2>Meet the trainer</h2>
+      <p class="lead">The founder of Camp Hermes, performer, breaker, and coach.</p>
+    </div>
+
+    <div class="trainer-card reveal">
+      <div class="trainer-main">
+        <div class="trainer-identity">
+          <Image src={profileImage} alt="Jashin Joshua" class="trainer-avatar" width={72} height={72} />
+          <div>
+            <h3>Jashin Joshua</h3>
+            <p class="trainer-handle">@jashin_joshua · Bboy Jashin</p>
+          </div>
+        </div>
+        <p class="trainer-bio">
+          Multi-disciplinary performer and trainer. Founder of Camp Hermes. Breaking athlete with
+          national-team experience, forging discipline, power, and willpower in others the same
+          way he trains himself.
+        </p>
+        <ul class="trainer-stats">
+          <li><strong>National Team</strong><span>Breaking athlete</span></li>
+          <li><strong>15+ countries</strong><span>Trained &amp; performed</span></li>
+          <li><strong>Gymnastics coach</strong><span>Olimpik Akademi</span></li>
+        </ul>
+        <ul class="trainer-creds">
+          <li>Founder of Camp Hermes</li>
+          <li>Breaking · National Team</li>
+          <li>Bboy at Drunk Steps Crew</li>
+          <li>Former gymnastics coach at Olimpik Akademi Cimnastik Kulübü</li>
+          <li>Former coordinator at Favori Spor Okulları Atakent</li>
+        </ul>
+        <div class="trainer-actions">
+          <a class="btn btn-primary" href="https://instagram.com/jashin_joshua/" target="_blank" rel="noopener">
+            Follow on Instagram
+          </a>
+          <a class="btn btn-ghost" href="https://facebook.com/orhan.mirza" target="_blank" rel="noopener">Facebook</a>
+          <a class="btn btn-ghost" href="https://youtube.com/@jashinway178/videos" target="_blank" rel="noopener">
+            YouTube
+          </a>
+        </div>
+      </div>
+
+      <div class="trainer-media">
+        <img
+          src={shots[0].full.src}
+          alt={shots[0].alt}
+          class="trainer-hero-img"
+          id="trainer-hero-img"
+          loading="lazy"
+        />
+        <div class="trainer-mosaic" id="trainer-mosaic">
+          {
+            shots.map((shot, i) => (
+              <button
+                type="button"
+                class:list={["trainer-shot", { "is-active": i === 0 }]}
+                data-full={shot.full.src}
+                aria-label={`Show photo ${i + 1}`}
+              >
+                <img src={shot.thumb.src} alt={shot.alt} loading="lazy" />
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="trainer-highlights reveal">
+      <p class="trainer-highlights-label">From the road</p>
+      <div class="trainer-chips">
+        <span>Abu Dhabi</span>
+        <span>Japan</span>
+        <span>Korea</span>
+        <span>Malaysia</span>
+        <span>🇦🇿 🇧🇪 🇹🇷 🇯🇵 🇰🇷 🇺🇦 🇦🇪</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trainer-card {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 40px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 32px;
+  }
+
+  .trainer-identity {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .trainer-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-strong);
+  }
+
+  .trainer-handle {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .trainer-bio {
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .trainer-stats {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .trainer-stats li {
+    display: grid;
+    gap: 2px;
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+  }
+
+  .trainer-stats span {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .trainer-creds {
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-bottom: 24px;
+  }
+
+  .trainer-creds li::before {
+    content: "— ";
+    color: var(--accent);
+  }
+
+  .trainer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .trainer-hero-img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 6px;
+    transition: opacity 0.2s ease;
+  }
+
+  .trainer-mosaic {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .trainer-shot {
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    background: none;
+  }
+
+  .trainer-shot.is-active {
+    border-color: var(--accent);
+  }
+
+  .trainer-shot img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .trainer-highlights {
+    margin-top: 28px;
+  }
+
+  .trainer-highlights-label {
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 10px;
+  }
+
+  .trainer-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .trainer-chips span {
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 860px) {
+    .trainer-card {
+      grid-template-columns: 1fr;
+      padding: 22px;
+    }
+
+    .trainer-stats {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function initTrainer() {
+    const hero = document.getElementById("trainer-hero-img") as HTMLImageElement | null;
+    const mosaic = document.getElementById("trainer-mosaic");
+    if (!hero || !mosaic) return;
+
+    mosaic.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>(".trainer-shot");
+      if (!btn?.dataset.full || btn.classList.contains("is-active")) return;
+
+      hero.style.opacity = "0.35";
+      const img = new Image();
+      img.onload = () => {
+        hero.src = btn.dataset.full ?? "";
+        hero.alt = btn.querySelector("img")?.alt ?? "Trainer photo";
+        hero.style.opacity = "1";
+      };
+      img.src = btn.dataset.full;
+
+      mosaic.querySelectorAll(".trainer-shot").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+    });
+  }
+
+  document.addEventListener("astro:page-load", initTrainer);
+</script>

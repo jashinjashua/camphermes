@@ -1,0 +1,12 @@
+---
+import TestLayout from "../../layouts/TestLayout.astro";
+import HeroRankTest from "../../components/quiz/HeroRankTest";
+---
+
+<TestLayout
+  title="Hero Rank Test · What's your power level?"
+  description="Find your rank, from D to S, in about 3 minutes."
+  ogImage="/og/rank.png"
+>
+  <HeroRankTest client:only="preact" />
+</TestLayout>

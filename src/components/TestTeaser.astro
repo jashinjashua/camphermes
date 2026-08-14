@@ -1,0 +1,114 @@
+---
+import { pictogramSvg } from "../lib/pictograms";
+
+const icons = ["pushups", "pullups", "handstand", "muscleups", "run"];
+---
+
+<section class="teaser section" id="test">
+  <div class="container">
+    <div class="teaser-panel reveal">
+      <div class="teaser-copy">
+        <h2>What's your power level?</h2>
+        <p class="lead">
+          The test takes about 3 minutes and covers 10 movements, from push-ups to planche.
+          Enter what you can actually do and it hands you your class, from D to S.
+        </p>
+        <div class="teaser-ctas">
+          <a href="/rank/" class="btn btn-primary">Take the test</a>
+          <span class="teaser-note">Free · No sign-up</span>
+        </div>
+      </div>
+      <div class="teaser-window" aria-hidden="true">
+        <div class="teaser-window-bar">HERO RANK</div>
+        <div class="teaser-letters">
+          <span class="rank-d">D</span>
+          <span class="rank-c">C</span>
+          <span class="rank-b">B</span>
+          <span class="rank-a">A</span>
+          <span class="rank-s">S</span>
+          <span class="rank-x locked">?</span>
+        </div>
+        <div class="teaser-icons">
+          {icons.map((id) => <span set:html={pictogramSvg(id, 34)} />)}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .teaser {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  .teaser-panel {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: center;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 44px;
+  }
+
+  .teaser-ctas {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 26px;
+  }
+
+  .teaser-note {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .teaser-window {
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .teaser-window-bar {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .teaser-letters {
+    display: flex;
+    justify-content: space-between;
+    padding: 22px 16px 8px;
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+  }
+
+  .teaser-letters span {
+    color: var(--rank-color);
+  }
+
+  .teaser-letters .locked {
+    opacity: 0.35;
+  }
+
+  .teaser-icons {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px 18px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 860px) {
+    .teaser-panel {
+      grid-template-columns: 1fr;
+      padding: 28px;
+    }
+  }
+</style>

@@ -1,0 +1,382 @@
+---
+import { Image } from "astro:assets";
+import ambientImage from "../assets/hero/ambient.jpg";
+
+// Layered hero. The artwork stays whole (black parts and painted glow
+// intact) and light is applied with a blend mode per layer: the beam and
+// dust are screened on so their black vanishes, and the material passes
+// are masked to skin, wing, and metal pixels. The frame shows the figure
+// from the dumbbells up; the bottom fades into the page.
+const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
+---
+
+<section id="home" class="hero">
+  <Image
+    src={ambientImage}
+    alt=""
+    class="hero-ambient"
+    widths={[768, 1280]}
+    sizes="100vw"
+    loading="eager"
+  />
+
+  <div class="hero-art" aria-hidden="true" style={`--visible: ${VISIBLE}`}>
+    <img src="/hero/figure.svg" alt="" class="art-img" loading="eager" fetchpriority="high" />
+    <div class="pass pass-skin"><img src="/hero/light-beam.jpg" alt="" class="tex tex-skin" /></div>
+    <div class="pass pass-wings"></div>
+    <div class="pass pass-metal"><img src="/hero/light-beam.jpg" alt="" class="tex tex-metal" /></div>
+    <img src="/hero/glint.png" alt="" class="laurel-glint" loading="lazy" />
+    <img src="/hero/light-beam.jpg" alt="" class="beam" loading="eager" />
+    <img src="/hero/dust.png" alt="" class="dust" loading="lazy" />
+  </div>
+
+  <div class="hero-scrim" aria-hidden="true"></div>
+
+  <div class="hero-inner container">
+    <div class="hero-copy">
+      <h1>Where Men are Forged</h1>
+      <p class="hero-sub">
+        Brutal training, high-quality meat, and a brotherhood of men pushing past their limits in
+        nature.
+      </p>
+      <div class="hero-ctas">
+        <a href="/rank/" class="btn btn-primary">Find your Hero Rank</a>
+        <a href="#classes" class="btn btn-ghost">See the classes</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 92svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .hero-ambient {
+    position: absolute;
+    inset: -4%;
+    width: 108%;
+    height: 108%;
+    object-fit: cover;
+    object-position: center 20%;
+    filter: blur(46px) brightness(0.45) saturate(1.15);
+    animation: kenburns 38s ease-in-out infinite alternate;
+  }
+
+  /* --- The artwork panel, whole and unclipped by alpha ---------------------- */
+
+  .hero-art {
+    position: absolute;
+    top: 0;
+    right: 2vw;
+    height: calc(92svh / var(--visible));
+    aspect-ratio: 1024 / 1536;
+    /* Fade the panel's side edges into the ambient so it never reads as a
+       pasted rectangle; the artwork's own dark ground does the rest. */
+    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 12%,
+      black 88%,
+      transparent 100%
+    );
+    animation: figure-drift 18s ease-in-out infinite;
+  }
+
+  .art-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .beam {
+    position: absolute;
+    top: -1.5%;
+    left: 50%;
+    width: 150%;
+    max-width: none;
+    mix-blend-mode: screen; /* black plate disappears, only light lands */
+    transform-origin: top center;
+    pointer-events: none;
+    opacity: 1;
+    /* Fade side and bottom plate edges but keep the source at full strength
+       so the light meets the top of the viewport with no gap */
+    mask-image: radial-gradient(ellipse 50% 56% at 50% 18%, black 58%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 50% 56% at 50% 18%, black 58%, transparent 80%);
+    animation: beam-sway 13.5s ease-in-out infinite;
+  }
+
+  /* Material light passes, masked to the artwork's own pixel classes */
+  .pass {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    pointer-events: none;
+  }
+
+  /* The moving light textures animate transform only, so the browser
+     composites them on the GPU instead of repainting the masked layer
+     every frame. */
+  .tex {
+    position: absolute;
+    top: -30%;
+    left: 0;
+    width: 280%;
+    max-width: none;
+    pointer-events: none;
+  }
+
+  .pass-skin {
+    mask-image: url("/hero/mask-skin.png");
+    -webkit-mask-image: url("/hero/mask-skin.png");
+    mix-blend-mode: screen;
+    opacity: 0.56;
+  }
+
+  .tex-skin {
+    animation: skin-crawl 10.5s ease-in-out infinite alternate;
+  }
+
+  .pass-wings {
+    mask-image: url("/hero/mask-wings.png");
+    -webkit-mask-image: url("/hero/mask-wings.png");
+    background: #ff7a2a;
+    mix-blend-mode: overlay;
+    animation: wing-ember 7.2s ease-in-out infinite;
+  }
+
+  .pass-metal {
+    mask-image: url("/hero/mask-metal.png");
+    -webkit-mask-image: url("/hero/mask-metal.png");
+    mix-blend-mode: screen;
+    opacity: 0;
+    animation: metal-glint 11s ease-in-out infinite;
+  }
+
+  .tex-metal {
+    animation: metal-slide 11s ease-in-out infinite;
+  }
+
+  .laurel-glint {
+    position: absolute;
+    top: 6%;
+    left: 52%;
+    width: 12%;
+    mix-blend-mode: screen;
+    opacity: 0;
+    animation: laurel-ping 7.2s ease-in-out infinite;
+  }
+
+  .dust {
+    position: absolute;
+    top: 8%;
+    left: 14%;
+    width: 72%;
+    max-width: none;
+    mix-blend-mode: screen;
+    opacity: 0.62;
+    animation: dust-drift 37s linear infinite;
+    pointer-events: none;
+  }
+
+  /* --- Scrim and copy -------------------------------------------------------- */
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, var(--bg) 0%, rgba(10, 11, 13, 0.4) 16%, rgba(10, 11, 13, 0) 34%),
+      linear-gradient(
+        to right,
+        rgba(10, 11, 13, 0.9) 0%,
+        rgba(10, 11, 13, 0.5) 42%,
+        rgba(10, 11, 13, 0) 68%
+      );
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding-top: 72px;
+  }
+
+  .hero-copy {
+    max-width: 520px;
+  }
+
+  .hero-sub {
+    max-width: 480px;
+    margin-top: 18px;
+    color: #b9c0ca;
+    font-size: 1.1rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  /* --- Motion ---------------------------------------------------------------- */
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.07);
+    }
+  }
+
+  @keyframes figure-drift {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-7px);
+    }
+  }
+
+  @keyframes beam-sway {
+    0%,
+    100% {
+      transform: translateX(-50%) rotate(-1.4deg);
+      opacity: 0.9;
+    }
+    50% {
+      transform: translateX(-50%) rotate(1.4deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes skin-crawl {
+    from {
+      transform: translate(-6%, -2%);
+    }
+    to {
+      transform: translate(-42%, 6%);
+    }
+  }
+
+  @keyframes wing-ember {
+    0%,
+    100% {
+      opacity: 0.15;
+    }
+    50% {
+      opacity: 0.62;
+    }
+  }
+
+  @keyframes metal-glint {
+    0%,
+    76%,
+    100% {
+      opacity: 0;
+    }
+    82% {
+      opacity: 0.94;
+    }
+    90% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes metal-slide {
+    0%,
+    76% {
+      transform: translate(-8%, -4%);
+    }
+    92%,
+    100% {
+      transform: translate(-40%, -12%);
+    }
+  }
+
+  @keyframes laurel-ping {
+    0%,
+    82%,
+    100% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    88% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    94% {
+      opacity: 0;
+      transform: scale(1.15);
+    }
+  }
+
+  @keyframes dust-drift {
+    from {
+      transform: translateY(3%);
+    }
+    to {
+      transform: translateY(-8%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-ambient,
+    .hero-art,
+    .beam,
+    .pass,
+    .laurel-glint,
+    .dust {
+      animation: none;
+    }
+    .laurel-glint {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .hero {
+      align-items: flex-end;
+    }
+
+    .hero-art {
+      right: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      height: auto;
+      width: 124vw;
+      animation: none;
+      /* Cut at the weights on mobile too: fade out below ~61% of the art */
+      mask-image: linear-gradient(to bottom, black 52%, transparent 74%);
+      -webkit-mask-image: linear-gradient(to bottom, black 52%, transparent 74%);
+    }
+
+    .hero-scrim {
+      background: linear-gradient(
+        to bottom,
+        rgba(10, 11, 13, 0.15) 0%,
+        rgba(10, 11, 13, 0.05) 40%,
+        rgba(10, 11, 13, 0.95) 78%,
+        var(--bg) 100%
+      );
+    }
+
+    .hero-inner {
+      padding-top: 76vw;
+      padding-bottom: 40px;
+    }
+  }
+</style>

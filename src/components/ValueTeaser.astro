@@ -1,0 +1,74 @@
+---
+import { Image } from "astro:assets";
+import trainingImage from "../assets/gallery/training-01.jpg";
+---
+
+<section class="section" id="intro">
+  <div class="container">
+    <div class="value-grid reveal">
+      <div>
+        <h2>Leave stronger than you arrived</h2>
+        <p class="lead">Walk out with a body that performs and a mind that refuses to quit.</p>
+        <ul class="value-list">
+          <li>Explosive strength, power, and balance under real pressure</li>
+          <li>Willpower forged through daily, brutal training</li>
+          <li>High-quality meat that fuels recovery and growth</li>
+          <li>Brotherhood with men who hold the same standard</li>
+          <li>Airport pickup, pool sessions, and a schedule built to transform you</li>
+        </ul>
+        <a href="/about/" class="text-link">Read the full story →</a>
+      </div>
+      <Image
+        src={trainingImage}
+        alt="Training at Camp Hermes"
+        class="value-media"
+        widths={[480, 760]}
+        sizes="(max-width: 860px) 100vw, 480px"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .value-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .value-list {
+    list-style: none;
+    margin: 26px 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .value-list li {
+    padding-left: 26px;
+    position: relative;
+  }
+
+  .value-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 12px;
+    height: 3px;
+    background: var(--accent);
+  }
+
+  .value-media {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  @media (max-width: 860px) {
+    .value-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

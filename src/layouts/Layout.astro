@@ -1,0 +1,70 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  ogUrl?: string;
+}
+
+const {
+  title,
+  description,
+  ogImage = "/og/default.png",
+  ogUrl = new URL(Astro.url.pathname, Astro.site).href,
+} = Astro.props;
+const ogImageAbs = new URL(ogImage, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/img/hermes-icon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+    <script>
+      function initReveals() {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px" },
+        );
+        for (const node of document.querySelectorAll(".reveal:not(.is-visible)")) {
+          // Only elements still below the fold get hidden; everything already
+          // on screen stays put, so nothing jumps after the page loads.
+          if (node.getBoundingClientRect().top > window.innerHeight * 0.95) {
+            node.classList.add("is-pending");
+            observer.observe(node);
+          }
+        }
+      }
+      document.addEventListener("astro:page-load", initReveals);
+    </script>
+  </body>
+</html>

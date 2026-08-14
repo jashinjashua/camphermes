@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "metrics": {
+    "pushups": { "label": "Push-ups", "question": "How many push-ups can you do in a row?", "unit": "reps", "axis": "push", "cap": 100, "step": 5 },
+    "situps": { "label": "Sit-ups", "question": "How many sit-ups can you do in a row?", "unit": "reps", "axis": "core", "cap": 80, "step": 5 },
+    "pullups": { "label": "Pull-ups", "question": "How many pull-ups can you do in a row?", "unit": "reps", "axis": "pull", "cap": 15, "step": 1 },
+    "dips": { "label": "Dips", "question": "How many dips can you do in a row?", "unit": "reps", "axis": "push", "cap": 30, "step": 2 },
+    "burpees": { "label": "Burpees", "question": "How many burpees can you do without stopping?", "unit": "reps", "axis": "endurance", "cap": 50, "step": 5 },
+    "plank": { "label": "Plank", "question": "How long can you hold a plank?", "unit": "seconds", "axis": "core", "cap": 300, "step": 10 },
+    "handstand": {
+      "label": "Handstand",
+      "question": "Where is your handstand?",
+      "unit": "ladder",
+      "axis": "skill",
+      "cap": 4,
+      "options": [
+        "No handstand yet",
+        "20 sec against the wall",
+        "30 sec free handstand",
+        "10 handstand push-ups in a row",
+        "20 handstand push-ups in a row"
+      ]
+    },
+    "muscleups": {
+      "label": "Muscle-ups",
+      "question": "Where are your muscle-ups?",
+      "unit": "ladder",
+      "axis": "pull",
+      "cap": 3,
+      "options": [
+        "No muscle-up yet",
+        "5 muscle-ups in a row",
+        "10 muscle-ups in a row",
+        "3 slow muscle-ups in a row"
+      ]
+    },
+    "statics": {
+      "label": "Statics",
+      "question": "What is the hardest static hold you own?",
+      "unit": "ladder",
+      "axis": "skill",
+      "cap": 2,
+      "options": [
+        "None of these yet",
+        "10 sec V-sit on the floor",
+        "10 sec straddle planche + 5 sec front/back lever"
+      ]
+    },
+    "run": { "label": "Run", "question": "How far can you run without stopping?", "unit": "km", "axis": "endurance", "cap": 20, "step": 1 }
+  },
+  "axes": {
+    "push": "Push",
+    "pull": "Pull",
+    "core": "Core",
+    "skill": "Skill",
+    "endurance": "Endurance"
+  },
+  "unranked": { "letter": "E", "name": "Civilian" },
+  "ranks": [
+    {
+      "level": 1,
+      "letter": "D",
+      "name": "Recruit",
+      "image": "about-01",
+      "requirements": [
+        { "text": "10 push ups in 1 min", "metric": "pushups", "min": 10 },
+        { "text": "20 sit ups in 1 min", "metric": "situps", "min": 20 },
+        { "text": "5 pull ups in 1 min", "metric": "pullups", "min": 5 },
+        { "text": "10 dips in 1 min", "metric": "dips", "min": 10 },
+        { "text": "10 burpees in 1 min", "metric": "burpees", "min": 10 },
+        { "text": "Plank 20 sec", "metric": "plank", "min": 20 },
+        { "text": "1 km Run", "metric": "run", "min": 1 }
+      ]
+    },
+    {
+      "level": 2,
+      "letter": "C",
+      "name": "Disciple",
+      "image": "about-02",
+      "requirements": [
+        { "text": "30 push ups in 1 min", "metric": "pushups", "min": 30 },
+        { "text": "50 sit ups in 1 min", "metric": "situps", "min": 50 },
+        { "text": "10 pull ups in 1 min", "metric": "pullups", "min": 10 },
+        { "text": "20 dips in 1 min", "metric": "dips", "min": 20 },
+        { "text": "30 burpees in 1 min", "metric": "burpees", "min": 30 },
+        { "text": "1 min plank", "metric": "plank", "min": 60 },
+        { "text": "Handstand 20 sec (on the wall)", "metric": "handstand", "min": 1 },
+        { "text": "3 km Run", "metric": "run", "min": 3 }
+      ]
+    },
+    {
+      "level": 3,
+      "letter": "B",
+      "name": "Warrior",
+      "image": "about-03",
+      "requirements": [
+        { "text": "60 push ups in a row", "metric": "pushups", "min": 60 },
+        { "text": "80 sit ups in a row", "metric": "situps", "min": 80 },
+        { "text": "15 pull ups in a row", "metric": "pullups", "min": 15 },
+        { "text": "30 dips in a row", "metric": "dips", "min": 30 },
+        { "text": "3 min plank", "metric": "plank", "min": 180 },
+        { "text": "Handstand 30 sec", "metric": "handstand", "min": 2 },
+        { "text": "5 Muscle ups in a row", "metric": "muscleups", "min": 1 },
+        { "text": "50 burpee push ups in a row", "metric": "burpees", "min": 50 },
+        { "text": "5 km Run", "metric": "run", "min": 5 }
+      ]
+    },
+    {
+      "level": 4,
+      "letter": "A",
+      "name": "Demigod",
+      "image": "about-04",
+      "requirements": [
+        { "text": "100 push ups in a row", "metric": "pushups", "min": 100 },
+        { "text": "10 Muscle ups in a row", "metric": "muscleups", "min": 2 },
+        { "text": "10 Handstand push ups in a row", "metric": "handstand", "min": 3 },
+        { "text": "10 sec V stand on the floor", "metric": "statics", "min": 1 },
+        { "text": "5 min plank", "metric": "plank", "min": 300 },
+        { "text": "10 km Run", "metric": "run", "min": 10 }
+      ]
+    },
+    {
+      "level": 5,
+      "letter": "S",
+      "name": "Olympian",
+      "image": "about-05",
+      "requirements": [
+        { "text": "3 Slow Muscle ups in a row", "metric": "muscleups", "min": 3 },
+        { "text": "20 Handstand push ups in a row", "metric": "handstand", "min": 4 },
+        { "text": "10 sec Straddle Planche", "metric": "statics", "min": 2 },
+        { "text": "5 sec Front/Back lever", "metric": "statics", "min": 2 },
+        { "text": "20 km Run", "metric": "run", "min": 20 }
+      ]
+    },
+    {
+      "level": null,
+      "letter": "X",
+      "name": "???",
+      "image": "about-0x",
+      "locked": true,
+      "requirements": [
+        { "text": "High level Willpower" },
+        { "text": "High level Discipline" },
+        { "text": "Never give up philosophy" }
+      ]
+    }
+  ]
+}
