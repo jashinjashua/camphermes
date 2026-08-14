@@ -67,6 +67,28 @@ drawn bold and geometric.
   human curates; LLM-coded character SVGs are explicitly out.
 - **Marketing frame:** "your training arc is real." The training-arc meme
   is established in fitness social media and the camp literally is one.
+- **Site hierarchy: the test is the prominent thing.** The first screen
+  shows the most important information about the camp (what it is, the
+  feel, the proof), immediately followed by the test with a themed call to
+  action. Visitors should be able to start the test right away. Everything
+  else (levels, gallery, trainer, contact) supports that funnel.
+- **Redesign freedom:** the current design is assumed to be weak. Rehash,
+  refactor, and redesign the site freely — layout, sections, visual system —
+  as long as all original content survives (level requirements, about text,
+  camp dates, trainer profile, gallery, contact details). Derive the design
+  from the camp's own principles: discipline, measurable standards, nature,
+  brotherhood, brutal in the sports sense without being brutish.
+- **The test lives on a standalone page** (own URL), not inside a
+  single-page app. The shared link is the viral unit: it must land directly
+  on the test or a result, carry per-rank Open Graph images, and load fast.
+  The homepage embeds a teaser (the hook and first question) that hands off
+  to the test page.
+- **The result must be screenshotable.** The result view is designed as a
+  self-contained card that fits one phone viewport: rank, name, power
+  level, radar, and the Camp Hermes mark all visible without scrolling, no
+  surrounding chrome that ruins a screenshot. The canvas-rendered share
+  image is the polished path, but a raw screenshot of the screen must also
+  look good, because that is what most people actually post.
 
 ## Current state of the repo
 
@@ -100,19 +122,26 @@ Exit criteria: same site, same URL, modern stack, better Lighthouse scores.
 
 ### Phase 2 — Redesign and interactivity
 
-1. Sharpen the visual system: dark athletic palette, bolder display type,
+1. Restructure the homepage around the funnel: first screen states what the
+   camp is in one hard sentence plus proof (nature, training, standards);
+   the next block is the test teaser with a themed call to action
+   ("What's your Hero Rank?" / "Take the test"). Levels, gallery, trainer,
+   and contact follow in support. This is a free redesign — keep the
+   content, not the current layout.
+2. Sharpen the visual system: dark athletic palette, bolder display type,
    consistent spacing tokens.
-2. Scroll-reveal animations, view transitions between pages, hover and
+3. Scroll-reveal animations, view transitions between pages, hover and
    press states on level cards.
-3. Rebrand the "Levels" section with the D–S rank letters so the site and
+4. Rebrand the "Levels" section with the D–S rank letters so the site and
    the test speak one language.
-4. Movement pictogram SVG set, used on the cards now and in the test later.
+5. Movement pictogram SVG set, used on the cards now and in the test later.
 
 ### Phase 3 — The Hero Rank Test
 
-1. Quiz flow as an Astro island (Svelte or Preact): one movement per
-   screen, big sliders and steppers, progress bar, 7–9 questions, under
-   3 minutes. Duolingo pacing, shonen tone in the microcopy.
+1. The test is a standalone Astro page with the quiz as an island (Svelte
+   or Preact): one movement per screen, big sliders and steppers, progress
+   bar, 7–9 questions, under 3 minutes. Duolingo pacing, shonen tone in the
+   microcopy. The homepage teaser links or hands off into this page.
 2. Scoring engine as pure, unit-tested functions reading `levels.json`:
    - Rank = highest level whose minimums are met.
    - Power level = weighted sum of inputs normalized against S-Rank
@@ -121,7 +150,9 @@ Exit criteria: same site, same URL, modern stack, better Lighthouse scores.
      dominant-stat type.
    - Quest line = the specific gaps to the next rank.
 3. Result screen: animated status-window reveal, radar draws itself, quest
-   line, "Apply for a Level N camp" call to action.
+   line, "Apply for a Level N camp" call to action. The card fits one phone
+   viewport and looks good in a raw screenshot (see the screenshotable
+   decision above).
 4. Sharing: canvas-rendered PNG of the status card plus the Web Share API;
    the result is also encoded in the URL so links reproduce the card;
    per-rank Open Graph images.
@@ -178,6 +209,11 @@ Phases run 1 → 2 → 3 in order; 4 and 5 may overlap with 3.
   the card.
 - Retaking the test with better inputs raises the power level under the
   same formula.
+- The first two screens of the homepage are the camp essentials and the
+  test call to action; a visitor can reach question 1 of the test in one
+  tap from the first viewport.
+- The result screen fits one phone viewport, and a raw screenshot of it
+  contains rank, rank name, power level, radar, and the Camp Hermes mark.
 
 ## Verification steps
 
