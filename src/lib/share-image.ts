@@ -122,7 +122,7 @@ export function renderShareImage(result: Result): HTMLCanvasElement {
       ctx.fillText(`${gap.label}: ${value}`, 76, questY + 48 + i * 42);
     });
   } else {
-    ctx.fillText("NEXT → X-RANK · ??? — THE TEST CANNOT TAKE YOU THERE.", 76, questY);
+    ctx.fillText("NEXT → X-RANK · ??? THE TEST CANNOT TAKE YOU THERE.", 76, questY);
   }
 
   // Footer

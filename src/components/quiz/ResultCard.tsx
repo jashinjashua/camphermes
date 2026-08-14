@@ -76,7 +76,7 @@ export default function ResultCard({ result, animate = true }: Props) {
           </>
         ) : (
           <p class="quest-title quest-locked">
-            NEXT → {lockedRank?.letter ?? "X"}-RANK · ??? — the test cannot take you there.
+            NEXT → {lockedRank?.letter ?? "X"}-RANK · ??? The test cannot take you there.
           </p>
         )}
       </div>

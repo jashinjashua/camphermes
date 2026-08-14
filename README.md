@@ -1,6 +1,6 @@
 # Camp Hermes
 
-Website of [camphermes.com](https://camphermes.com) — a training camp where men are forged.
+Website of [camphermes.com](https://camphermes.com), a training camp where men are forged.
 
 Built with [Astro](https://astro.build). The level requirements live in
 `src/data/levels.json`; both the level cards and the Hero Rank Test

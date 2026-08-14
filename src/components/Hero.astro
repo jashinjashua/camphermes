@@ -3,11 +3,11 @@ import { Image } from "astro:assets";
 import artworkImage from "../assets/hero/source.png";
 import ambientImage from "../assets/hero/ambient.jpg";
 
-// Layered hero, Photoshop-style: the artwork stays whole (black parts and
-// its painted glow intact) and light is applied with selective blend modes
-// per layer — the beam and dust are `screen`ed on (black vanishes), the
-// material passes are masked to skin / wings / metal pixels. The frame
-// shows the figure from the dumbbells up; the bottom fades into the page.
+// Layered hero. The artwork stays whole (black parts and painted glow
+// intact) and light is applied with a blend mode per layer: the beam and
+// dust are screened on so their black vanishes, and the material passes
+// are masked to skin, wing, and metal pixels. The frame shows the figure
+// from the dumbbells up; the bottom fades into the page.
 const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
 ---
 
@@ -31,9 +31,9 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
       loading="eager"
       fetchpriority="high"
     />
-    <div class="pass pass-skin"></div>
+    <div class="pass pass-skin"><img src="/hero/light-beam.jpg" alt="" class="tex tex-skin" /></div>
     <div class="pass pass-wings"></div>
-    <div class="pass pass-metal"></div>
+    <div class="pass pass-metal"><img src="/hero/light-beam.jpg" alt="" class="tex tex-metal" /></div>
     <img src="/hero/glint.png" alt="" class="laurel-glint" loading="lazy" />
     <img src="/hero/light-beam.jpg" alt="" class="beam" loading="eager" />
     <img src="/hero/dust.png" alt="" class="dust" loading="lazy" />
@@ -125,6 +125,7 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
   .pass {
     position: absolute;
     inset: 0;
+    overflow: hidden;
     mask-repeat: no-repeat;
     mask-size: 100% 100%;
     -webkit-mask-repeat: no-repeat;
@@ -132,13 +133,26 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     pointer-events: none;
   }
 
+  /* The moving light textures animate transform only, so the browser
+     composites them on the GPU instead of repainting the masked layer
+     every frame. */
+  .tex {
+    position: absolute;
+    top: -30%;
+    left: 0;
+    width: 280%;
+    max-width: none;
+    pointer-events: none;
+  }
+
   .pass-skin {
     mask-image: url("/hero/mask-skin.png");
     -webkit-mask-image: url("/hero/mask-skin.png");
-    background-image: url("/hero/light-beam.jpg");
-    background-size: 300% 200%;
     mix-blend-mode: screen;
     opacity: 0.45;
+  }
+
+  .tex-skin {
     animation: skin-crawl 13s ease-in-out infinite alternate;
   }
 
@@ -153,11 +167,13 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
   .pass-metal {
     mask-image: url("/hero/mask-metal.png");
     -webkit-mask-image: url("/hero/mask-metal.png");
-    background-image: url("/hero/light-beam.jpg");
-    background-size: 340% 260%;
     mix-blend-mode: screen;
     opacity: 0;
     animation: metal-glint 14s ease-in-out infinite;
+  }
+
+  .tex-metal {
+    animation: metal-slide 14s ease-in-out infinite;
   }
 
   .laurel-glint {
@@ -258,10 +274,10 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
 
   @keyframes skin-crawl {
     from {
-      background-position: 18% 0%;
+      transform: translate(-6%, -2%);
     }
     to {
-      background-position: 82% 30%;
+      transform: translate(-42%, 6%);
     }
   }
 
@@ -283,11 +299,20 @@ const VISIBLE = 0.61; // fraction of the artwork height shown (head → weights)
     }
     82% {
       opacity: 0.75;
-      background-position: 30% 20%;
     }
     90% {
       opacity: 0;
-      background-position: 70% 45%;
+    }
+  }
+
+  @keyframes metal-slide {
+    0%,
+    76% {
+      transform: translate(-8%, -4%);
+    }
+    92%,
+    100% {
+      transform: translate(-40%, -12%);
     }
   }
 

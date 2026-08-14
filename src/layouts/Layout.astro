@@ -44,8 +44,6 @@ const ogImageAbs = new URL(ogImage, Astro.site).href;
     <slot />
     <script>
       function initReveals() {
-        const nodes = document.querySelectorAll(".reveal:not(.is-visible)");
-        if (!nodes.length) return;
         const observer = new IntersectionObserver(
           (entries) => {
             for (const entry of entries) {
@@ -57,7 +55,14 @@ const ogImageAbs = new URL(ogImage, Astro.site).href;
           },
           { rootMargin: "0px 0px -8% 0px" },
         );
-        nodes.forEach((n) => observer.observe(n));
+        for (const node of document.querySelectorAll(".reveal:not(.is-visible)")) {
+          // Only elements still below the fold get hidden; everything already
+          // on screen stays put, so nothing jumps after the page loads.
+          if (node.getBoundingClientRect().top > window.innerHeight * 0.95) {
+            node.classList.add("is-pending");
+            observer.observe(node);
+          }
+        }
       }
       document.addEventListener("astro:page-load", initReveals);
     </script>
