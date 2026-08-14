@@ -72,12 +72,24 @@ drawn bold and geometric.
   feel, the proof), immediately followed by the test with a themed call to
   action. Visitors should be able to start the test right away. Everything
   else (levels, gallery, trainer, contact) supports that funnel.
-- **Redesign freedom:** the current design is assumed to be weak. Rehash,
-  refactor, and redesign the site freely — layout, sections, visual system —
-  as long as all original content survives (level requirements, about text,
-  camp dates, trainer profile, gallery, contact details). Derive the design
-  from the camp's own principles: discipline, measurable standards, nature,
-  brotherhood, brutal in the sports sense without being brutish.
+- **Redesign freedom, content stability:** the current design is assumed
+  to be weak. Rehash, refactor, and redesign the site at will — layout,
+  sections, structure, visual system — but do not rewrite the prose much.
+  All original content survives: level requirements, about text, camp
+  dates, trainer profile, gallery, contact details. Corrections are
+  welcome (spelling, grammar, factual slips such as "Malasia" or
+  "August 31th"); wholesale rewording of the camp's voice is not. Derive
+  the design from the camp's own principles: discipline, measurable
+  standards, nature, brotherhood, brutal in the sports sense without being
+  brutish.
+- **No backend, confirmed.** Scoring runs in the browser; results are
+  encoded in the URL; the name and saved results live in localStorage; the
+  share image is canvas-rendered; the form stays on EmailJS; hosting stays
+  on GitHub Pages; analytics is a third-party script. Accepted trade-offs:
+  Open Graph images are per-rank, not per-person (the personal card
+  travels as a screenshot or PNG); no aggregate stats, percentiles, or
+  leaderboards at launch (would need a small worker + store later);
+  applications arrive as email, not structured records.
 - **The test lives on a standalone page** (own URL), not inside a
   single-page app. The shared link is the viral unit: it must land directly
   on the test or a result, carry per-rank Open Graph images, and load fast.
@@ -89,6 +101,30 @@ drawn bold and geometric.
   surrounding chrome that ruins a screenshot. The canvas-rendered share
   image is the polished path, but a raw screenshot of the screen must also
   look good, because that is what most people actually post.
+
+## UX principles
+
+The test comes first. Every UX call resolves in favor of getting a visitor
+into question 1 and back out with a shareable result.
+
+- **Test-first funnel:** the first screen states what the camp is; the test
+  call to action is visible in or immediately after the first viewport.
+  One tap from landing to question 1. Levels, gallery, trainer, and
+  contact exist to support that path, never to compete with it.
+- **Mobile-first:** the audience arrives from Instagram and TikTok links.
+  Design for one-hand phone use; desktop is the adaptation.
+- **Inside the test, nothing else:** no navigation, no footer, no exits
+  besides back. One movement per screen, big touch targets, a progress
+  bar, 7–9 questions, under 3 minutes.
+- **The result is the reward:** animated status-window reveal, then a card
+  that fits one phone viewport and survives a raw screenshot. Share and
+  apply actions sit directly under the card, in that order.
+- **Returning visitors resume, not restart:** saved result shows first
+  with a retake option; retakes lead with the delta and the RANK UP
+  moment.
+- **Themed, not costumed:** shonen tone lives in microcopy, reveal
+  animations, and the card format. It never adds steps, modals, or
+  friction to the funnel.
 
 ## Current state of the repo
 
